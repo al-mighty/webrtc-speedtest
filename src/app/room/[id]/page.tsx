@@ -54,7 +54,8 @@ export default function RoomPage() {
 
   useEffect(() => {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const ws = new WebSocket(`${wsProtocol}//${window.location.host}/ws`);
+    const basePath = window.location.pathname.includes('/webrtc/speedtest') ? '/webrtc/speedtest' : '';
+    const ws = new WebSocket(`${wsProtocol}//${window.location.host}${basePath}/ws`);
     wsRef.current = ws;
 
     ws.onopen = () => {
@@ -206,6 +207,19 @@ export default function RoomPage() {
             )}
           </div>
         </div>
+      )}
+
+      {phase === 'done' && channelRef.current?.readyState === 'open' && (
+        <button
+          onClick={() => {
+            setLatency(0); setBandwidth(0); setPacketLoss(0);
+            setResults({ latency: null, bandwidth: null, packetLoss: null });
+            if (channelRef.current) runTests(channelRef.current);
+          }}
+          className="mt-6 px-6 py-3 rounded-lg border border-[#d4ff3a] text-[#d4ff3a] font-bold hover:bg-[#d4ff3a] hover:text-[#0a0e1a] transition"
+        >
+          Run Again
+        </button>
       )}
 
       <footer className="absolute bottom-6 text-xs text-[#8b94a8]">

@@ -1,7 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: "standalone",
+  basePath: process.env.NODE_ENV === 'production' ? "/webrtc/speedtest" : "",
 };
 
 export default nextConfig;

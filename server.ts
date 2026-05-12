@@ -34,7 +34,7 @@ app.prepare().then(() => {
   const wss = new WebSocketServer({ noServer: true });
 
   server.on('upgrade', (req, socket, head) => {
-    if (req.url?.startsWith('/ws')) {
+    if (req.url?.endsWith('/ws') || req.url?.startsWith('/ws')) {
       wss.handleUpgrade(req, socket, head, (ws) => {
         wss.emit('connection', ws, req);
       });
