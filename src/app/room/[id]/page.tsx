@@ -180,7 +180,7 @@ export default function RoomPage() {
 
       <div className="flex gap-8">
         <Gauge value={latency} max={500} unit="ms" label="Latency" invert />
-        <Gauge value={bandwidth} max={100} unit="Mbps" label="Bandwidth" />
+        <Gauge value={bandwidth} max={Math.max(100, bandwidth * 1.2)} unit="Mbps" label="Bandwidth" />
         <Gauge value={packetLoss} max={10} unit="%" label="Packet Loss" invert />
       </div>
 
