@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# WebRTC P2P Speed Test
+
+Peer-to-peer network speed test using WebRTC DataChannel. Measures latency, bandwidth, and packet loss between two browsers connected via a lightweight WebSocket signaling server. Room-based architecture with shareable links.
+
+**Live:** [cheslav.space/webrtc/speedtest](https://cheslav.space/webrtc/speedtest/)
+
+## Tech Stack
+
+- **Next.js 16** — App Router, React 19
+- **WebRTC** — RTCPeerConnection + DataChannel for P2P measurement
+- **WebSocket** — Custom signaling server (`ws` library)
+- **TypeScript**
+- **Tailwind CSS 4**
+- **SVG Gauges** — Real-time animated speed visualization
+
+## Features
+
+- Latency measurement (RTT) via DataChannel ping/pong
+- Bandwidth estimation with bulk data transfer
+- Packet loss detection
+- Real-time SVG gauge visualization
+- Room-based connections with shareable links
+- No third-party servers in the measurement path
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
+pnpm dev           # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The dev server starts both the Next.js app and the WebSocket signaling server.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm build
+pnpm start
+```
 
-## Learn More
+## How It Works
 
-To learn more about Next.js, take a look at the following resources:
+1. User creates or joins a **room** via URL
+2. **Signaling server** (WebSocket) exchanges SDP offers/answers and ICE candidates
+3. **WebRTC DataChannel** is established directly between peers
+4. Speed test runs ping/pong for latency, bulk transfers for bandwidth
+5. Results displayed on animated **SVG gauges**
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+webrtc-speedtest/
+├── src/
+│   ├── app/
+│   │   ├── page.tsx        # Landing — create room
+│   │   └── room/           # Room page — speed test UI
+│   ├── components/
+│   │   └── gauge.tsx       # SVG gauge visualization
+│   ├── hooks/              # React hooks for WebRTC state
+│   └── lib/
+│       ├── webrtc.ts       # WebRTC connection & DataChannel logic
+│       ├── speed-test.ts   # Measurement algorithms
+│       └── room-id.ts      # Room ID generation
+├── server.ts               # WebSocket signaling server
+├── next.config.ts
+├── package.json
+└── Dockerfile
+```
 
-## Deploy on Vercel
+## Author
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Vyacheslav Kovalev — [GitHub](https://github.com/al-mighty) · [cheslav.space](https://cheslav.space)
